@@ -47,32 +47,71 @@ class LinkedList
   end
 
   def prepend(node)
-    node.next = head
+    node.next = head == nil ? nil : head
 
     self.head = node
 
     self.size += 1
+
+    tail = node if node.next == nil
   end
 
+  # returns nil if out of bounds, inode otherwise
   def insert_at(inode, index)
-    node = head
+    return nil if index < 1 || index > size
 
-    index.times - 1.times { node = node.next }
+    prev_node = get_prev_node(index) unless index == 1
 
-     
+    if index > 1
+      inode.next = prev_node.next
+
+      prev_node.next = inode
+
+      self.size += 1
+    else
+      prepend(inode)
+    end
+
+    inode
+  end 
+
+  # returns nil if out of bounds or removed node otherwise
+  def remove_at(index)
+    return nil if index < 1 or index  > size
+
+    if index == 1
+      node = head
+
+      self.head = head.next
+    else
+      prev_node = get_prev_node(index)
+
+      node = prev_node.next
+
+      prev_node.next = node.next
+    end
+
+    self.size -=1
+    
+    node
+  end
 
   def pop
+    return nil if head == nil
+
     node = head
 
-    until node.next == tail do
-     node = node.next
-    end
+    (self.size - 2).times { node = node.next }
+
+    pop_node = node.next
 
     node.next = nil
 
     tail = node
 
     self.size -= 1
+
+    pop_node
   end
 
   # 1 based index
@@ -124,9 +163,19 @@ class LinkedList
   def size
     @size
   end
-    
   
   private
+
+  def get_prev_node(index)
+    prev_node = node = head
+
+    (index - 1).times do
+      prev_node = node 
+      node = node.next
+    end
+
+    prev_node
+  end
 
   def head=(node)
     @head = node
@@ -160,7 +209,7 @@ puts("Tail node: #{a_list.tail}")
 puts("The fourth node is: #{a_list.at(4)}")
 
 puts("Remove last element")
-a_list.pop
+puts("Removed: #{a_list.pop}")
 
 puts("Linked list size: #{a_list.size}")
 
@@ -181,3 +230,57 @@ puts("Linked list size: #{a_list.size}")
 a_list.print_list
 
 puts("'singly' is located at index: #{a_list.find('singly')}")
+
+puts("Insert at 'Really' at index 1:")
+
+a_list.insert_at(Node.new('Really'), 1)
+
+puts("Linked list size: #{a_list.size}")
+
+a_list.print_list
+
+puts("Insert at 'nifty' at index 2:")
+
+a_list.insert_at(Node.new('nifty'), 2)
+
+puts("Linked list size: #{a_list.size}")
+
+a_list.print_list
+
+puts("Insert at 'Cool!' at index 8:")
+
+a_list.insert_at(Node.new('Cool!'), 8)
+
+puts("Linked list size: #{a_list.size}")
+
+a_list.print_list
+
+puts("Remove index 8:")
+
+puts("Removed: #{a_list.remove_at(8)}")
+
+puts("Linked list size: #{a_list.size}")
+
+a_list.print_list
+
+puts("Remove index 1:")
+
+puts("Removed: #{a_list.remove_at(1)}")
+
+puts("Linked list size: #{a_list.size}")
+
+a_list.print_list
+
+puts("Remove tail:")
+
+puts("Removed: #{a_list.remove_at(a_list.size)}")
+
+puts("Linked list size: #{a_list.size}")
+
+a_list.print_list
+
+
+
+
+
+
