@@ -39,14 +39,16 @@ class LinkedList
   end
 
   def append(node)
-    self.head = self.tail = node if head == nil
-
     self.tail = self.tail.next = node unless head == nil
+
+    self.head = self.tail = node if head == nil
 
     self.size += 1
   end
 
   def prepend(node)
+    return if head == nil
+
     node.next = head == nil ? nil : head
 
     self.head = node
@@ -190,97 +192,29 @@ class LinkedList
   end
 end
 
-array = %w(This is a singly linked list)
+def empty_tests
+  a_list = LinkedList.new
 
-a_list = LinkedList.new
-
-array.each do |word|
-  a_list.append(Node.new(word))
+  puts("Empty list tests:")
+  puts("prepend: #{a_list.prepend(Node.new('fail'))}")
+  puts("head: >>#{a_list.head}<<")
+  puts("size: #{a_list.size}")
+  puts("at(1): #{a_list.at(1)}")
+  puts("pop : #{a_list.pop}")
+  puts("contains?('fail'): #{a_list.contains?('fail')}")
+  puts("find('fail'): #{a_list.find('fail')}")
+  puts("insert_at('fail',1): #{a_list.insert_at(Node.new('fail'),1)}")
+  puts("head: >>#{a_list.head}<<")
+  puts("remove_at(1): #{a_list.remove_at(1)}")
+  puts("head: >>#{a_list.head}<<")
+  puts("append test:")
+  a_list.append(Node.new('append'))
+  puts("size: #{a_list.size}")
+  puts("head: >>#{a_list.head}<<")
+  puts("tail: >>#{a_list.tail}<<")
+  a_list.print_list
 end
 
-a_list.print_list
-
-puts("Linked list size: #{a_list.size}")
-
-puts("Head node: #{a_list.head}")
-
-puts("Tail node: #{a_list.tail}")
-
-puts("The fourth node is: #{a_list.at(4)}")
-
-puts("Remove last element")
-puts("Removed: #{a_list.pop}")
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("The list contains 'singly': #{a_list.contains?('singly')}")
-
-puts("The list contains 'linked': #{a_list.contains?('linked')}")
-
-puts("The list contains 'doubly': #{a_list.contains?('doubly')}")
-
-puts("Prepend 'Wow'")
-
-a_list.prepend(Node.new('Wow'))
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("'singly' is located at index: #{a_list.find('singly')}")
-
-puts("Insert at 'Really' at index 1:")
-
-a_list.insert_at(Node.new('Really'), 1)
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("Insert at 'nifty' at index 2:")
-
-a_list.insert_at(Node.new('nifty'), 2)
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("Insert at 'Cool!' at index 8:")
-
-a_list.insert_at(Node.new('Cool!'), 8)
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("Remove index 8:")
-
-puts("Removed: #{a_list.remove_at(8)}")
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("Remove index 1:")
-
-puts("Removed: #{a_list.remove_at(1)}")
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-puts("Remove tail:")
-
-puts("Removed: #{a_list.remove_at(a_list.size)}")
-
-puts("Linked list size: #{a_list.size}")
-
-a_list.print_list
-
-
-
-
+empty_tests
 
 
