@@ -47,15 +47,17 @@ class LinkedList
   end
 
   def prepend(node)
-    return if head == nil
+    if head == nil
+      append(node)
+    else
+      node.next = head == nil ? nil : head
 
-    node.next = head == nil ? nil : head
+     self.head = node
 
-    self.head = node
+     self.size += 1
 
-    self.size += 1
-
-    tail = node if node.next == nil
+     self.tail = node if node.next == nil
+    end
   end
 
   # returns nil if out of bounds, inode otherwise
@@ -79,18 +81,22 @@ class LinkedList
 
   # returns nil if out of bounds or removed node otherwise
   def remove_at(index)
-    return nil if index < 1 or index  > size
+    return nil if index < 1 || index  > size
 
     if index == 1
       node = head
 
-      self.head = head.next
+      self.head = head.next if head != tail
+
+      self.head = self.tail = nil if head == tail
     else
       prev_node = get_prev_node(index)
 
       node = prev_node.next
 
       prev_node.next = node.next
+
+      self.tail = prev_node
     end
 
     self.size -=1
@@ -101,15 +107,21 @@ class LinkedList
   def pop
     return nil if head == nil
 
-    node = head
+    if head == tail
+      pop_node = head
 
-    (self.size - 2).times { node = node.next }
+      self.head = self.tail = nil
+    else
+     node = head
 
-    pop_node = node.next
+     (self.size - 2).times { node = node.next }
 
-    node.next = nil
+     pop_node = node.next
 
-    tail = node
+     node.next = nil
+
+     self.tail = node
+    end
 
     self.size -= 1
 
@@ -133,11 +145,10 @@ class LinkedList
     node = head
 
     until node == nil
-      if node.value == value
-        found = true
-        break
-      end
-      
+      found = true if node.value == value
+     
+      break if found
+
       node = node.next
     end
 
@@ -192,13 +203,22 @@ class LinkedList
   end
 end
 
+def print_list_stats(list)
+  puts("size: #{list.size}")
+  puts("head: >>#{list.head}<<")
+  puts("tail: >>#{list.tail}<<")
+  list.print_list if list.head != nil
+  puts('List is empty') if list.head == nil
+end
+
 def empty_tests
   a_list = LinkedList.new
+  b_list = LinkedList.new
 
-  puts("Empty list tests:")
-  puts("prepend: #{a_list.prepend(Node.new('fail'))}")
-  puts("head: >>#{a_list.head}<<")
-  puts("size: #{a_list.size}")
+  puts("\n\nEmpty list tests:")
+  puts("prepend:")
+  b_list.prepend(Node.new('succeed'))
+  print_list_stats(b_list)
   puts("at(1): #{a_list.at(1)}")
   puts("pop : #{a_list.pop}")
   puts("contains?('fail'): #{a_list.contains?('fail')}")
@@ -209,12 +229,35 @@ def empty_tests
   puts("head: >>#{a_list.head}<<")
   puts("append test:")
   a_list.append(Node.new('append'))
-  puts("size: #{a_list.size}")
-  puts("head: >>#{a_list.head}<<")
-  puts("tail: >>#{a_list.tail}<<")
-  a_list.print_list
+  print_list_stats(a_list)
+end
+
+def single_node_tests
+  a_list = LinkedList.new
+
+  puts("\n\nSingle node tests:")
+  a_list.append(Node.new('append'))
+  print_list_stats(a_list)
+  puts("at(0): >>#{a_list.at(0)}<<")
+  puts("at(1): >>#{a_list.at(1)}<<")
+  puts("contains?('append'): #{a_list.contains?('append')}")
+  puts("find('append'): #{a_list.find('append')}")
+  puts("pop: #{a_list.pop}")
+  print_list_stats(a_list)
+
+  puts("Create new list...")
+  a_list = LinkedList.new
+  a_list.append(Node.new('append'))
+  puts("insert_at(1): #{a_list.insert_at(Node.new('first'),1)}")
+  print_list_stats(a_list)
+
+  puts("Create new list...")
+  a_list = LinkedList.new
+  a_list.append(Node.new('append'))
+  puts("remove_at(1): #{a_list.remove_at(1)}")
+  print_list_stats(a_list)
 end
 
 empty_tests
-
+single_node_tests
 
