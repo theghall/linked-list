@@ -2,8 +2,6 @@
 #
 # 20170310	GH
 #
-require 'byebug'
-
 module LinkedList
   # Linked List Node (Singly linked)
   class Node
